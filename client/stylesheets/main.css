@@ -1,0 +1,134 @@
+/*-------color-------*/
+.white,.white:hover,.white:focus,.white:active,.navbar-default .navbar-nav>li>a:hover,.navbar-default .navbar-nav>li>a,.navbar-default .navbar-nav>.open>a:hover,.dropdown-menu>li>a,.dropdown-menu>li>a:hover{
+    color: white;
+}
+.bgwhite,.navbar-default .container-fluid{
+    background-color: white;
+}
+.bglgray{
+    background-color: #fbfafa;
+}
+.mgray,.mgray:hover,.mgray:focus,.mgray:active,body{
+    color: #585456;
+}
+.bgmgray{
+    background: #585456;
+}
+.bgdgray{
+    background-color: #41474e;
+}
+.orange,.orange:hover,.orange:focus,.orange:active,.navbar-default .navbar-brand,.navbar-default .navbar-brand:hover{
+    color: #f37715;
+}
+.bgorange{
+    background-color: #f37715;
+}
+.dorange{
+    color: #ee7516;
+}
+.bgdorange{
+    background-color: #ee7516;
+}
+.red,.red:hover,.red:focus,.red:active{
+    color: red;
+}
+.bgred{
+    background-color: red;
+}
+.lblue,.lblue:hover,.lblue:focus,.lblue:active{
+    color: #24a2fb;
+}
+.bglblue,.dropdown-menu{
+    background-color: #24a2fb;
+}
+.mblue{
+    color: #171647;
+}
+.bgmblue,.navbar-default .navbar-nav>li>a:hover,.dropdown-menu>li>a:hover,.navbar-default .navbar-nav>.open>a:hover{
+    background-color: #171647;
+}
+.dblue,.navbar-default .navbar-nav>li>a{
+    color: #06162f;
+}
+.bgdblue{
+    background-color: #06162f;
+}
+/*-------common-------*/
+.bold {
+    font-weight: bold;
+}
+.smallspace {
+    height: 25px
+}
+.space {
+    height: 50px;
+}
+.vertical-line {
+    float: right;
+    width:1px;
+    height:450px;
+    position:absolute;
+    margin-top:50px;
+    margin-right:0px;
+    border: 0;
+    background: #333;
+    background-image: linear-gradient(to bottom, #ccc, #333, #ccc);
+}
+a:hover, a:active {
+    text-decoration: none
+}
+/*-------form-------*/
+.form-control {
+    border-radius: 0
+}
+/*-------table-------*/
+.table-striped>tbody>tr:nth-of-type(odd){
+    background-color: floralwhite;
+}
+/*-------navigation-------*/
+.headmenu {
+    border-radius: 0px
+}
+.navbar-default .navbar-nav>li>a{
+    font-weight: bold;
+}
+/*-------footer-------*/
+.footer {
+    margin-top: 10px;
+}
+div.dataTables_processing {
+    z-index: 1 !important;
+}
+.row-input{
+    margin-top : 5px;
+    margin-bottom: 5px;
+}
+legend {
+    margin-bottom: 10px !important;
+}
+.td-record-value{
+    text-align: right !important;
+    vertical-align: middle !important;
+}
+.td-record-normal{
+    text-align: left;
+    vertical-align: middle !important;
+}
+.td-record-draft{
+    font-style: italic;
+    color: darkblue;
+    text-decoration:line-through;
+}
+#tblRecords{
+    border: solid 1px #000000;
+}
+.modal-footer{
+    text-align: left;
+}
+.colorselect {
+    background-color: lightgreen;
+    font-weight: bold;
+}
+.colorselect option {
+    background-color: white;
+}

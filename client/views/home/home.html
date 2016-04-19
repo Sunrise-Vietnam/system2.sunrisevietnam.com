@@ -1,0 +1,168 @@
+<template name="home">
+    <div class="row">
+        <div class="col-xs-12">
+            <h3 class="dblue bold">Tổng kết hồ sơ du học</h3>
+        </div>
+    </div>
+    <hr/>
+    <div class="row">
+        <div class="col-md-12 col-lg-12">
+            <input type="text" class="form-control" name="daterange" style="width: 241px !important;"/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="table-responsive">
+                <table class="table table-bordered record_trees" id="record_trees">
+                    <thead>
+                    <tr class="info">
+                        <th style="width: 40%"></th>
+                        <th style="width: 11%" class="td-record-value">Đang chuẩn bị</th>
+                        <th style="width: 10%" class="td-record-value">Ký hợp đồng</th>
+                        <th style="width: 12%" class="td-record-value">Đang chờ Visa</th>
+                        <th style="width: 8%" class="td-record-value">Đỗ Visa</th>
+                        <th style="width: 9%" class="td-record-value">Trượt Visa</th>
+                        <th style="width: 10%" class="td-record-value">Đã nhập học</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {{#if Template.subscriptionsReady}}
+                        {{#each _getBranches}}
+                            {{> records_treeGrid_level_1}}
+                        {{/each}}
+                    {{else}}
+                        <tr>
+                            <td colspan="7" class="text-center"><span class="label label-info">Đang tải dữ liệu...</span></td>
+                        </tr>
+                    {{/if}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="space"></div>
+    {{> regReport}}
+</template>
+<template name="regReport">
+    <div class="row">
+        <div class="col-xs-12"><h3 class="dblue bold">Tổng kết người đăng ký</h3></div>
+    </div>
+    <hr/>
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                    <tr class="success">
+                        <th style="width: 40%">Nguồn đăng ký</th>
+                        <th style="width: 11%" class="td-record-value">Tổng số đăng ký</th>
+                        <th style="width: 10%" class="td-record-value">Tiềm năng</th>
+                        <th style="width: 12%" class="td-record-value">Chưa liên hệ</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {{#each _cates}}
+                        {{> row_regReport}}
+                    {{/each}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template name="row_regReport">
+    <tr>
+        <td>{{valueName}}</td>
+        <td class="td-record-value">{{total}}</td>
+        <td class="td-record-value">{{potential}}</td>
+        <td class="td-record-value">{{notcalled}}</td>
+    </tr>
+</template>
+
+<template name="records_treeGrid_level_1">
+    <tr class="{{className}}" style="font-weight: bold">
+        <td>{{value}}</td>
+        <td class="td-record-value">{{getValueOfStatusAtBranch '_DANG-CHUAN-BI'}}</td>
+        <td class="td-record-value">{{getValueOfStatusAtBranch '_KY-HOP-DONG'}}</td>
+        <td class="td-record-value">{{getValueOfStatusAtBranch '_DANG-CHO-VISA'}}</td>
+        <td class="td-record-value">{{getValueOfStatusAtBranch '_DO-VISA'}}</td>
+        <td class="td-record-value">{{getValueOfStatusAtBranch '_TRUOT-VISA'}}</td>
+        <td class="td-record-value">{{getValueOfStatusAtBranch '_DA-NHAP-HOC'}}</td>
+    </tr>
+    {{#each getUsers}}
+        {{> records_treeGrid_level_2}}
+    {{/each}}
+</template>
+
+<template name="records_treeGrid_level_2">
+    <tr class="{{className}}">
+        <td>
+            {{profile.FullName}}
+            &nbsp;<button class="btn btn-xs btn-warning" {{b "click : _viewDetail"}}>
+            <span class="glyphicon glyphicon-zoom-in"></span>
+        </button>
+        </td>
+        <td class="td-record-value">{{getValueOfStatus '_DANG-CHUAN-BI'}}</td>
+        <td class="td-record-value">{{getValueOfStatus '_KY-HOP-DONG'}}</td>
+        <td class="td-record-value">{{getValueOfStatus '_DANG-CHO-VISA'}}</td>
+        <td class="td-record-value">{{getValueOfStatus '_DO-VISA'}}</td>
+        <td class="td-record-value">{{getValueOfStatus '_TRUOT-VISA'}}</td>
+        <td class="td-record-value">{{getValueOfStatus '_DA-NHAP-HOC'}}</td>
+    </tr>
+</template>
+
+<template name="modal_records_treeGrid_Detail">
+    <div class="modal fade" id="modal_records_treeGrid_Detail" name="editModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel" {{b "text : title"}}></h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row row-input">
+                        <div class="col-md-12 col-lg-12">
+
+                        </div>
+                    </div>
+                    <div class="row row-input">
+                        <div class="col-md-12 col-lg-12">
+                            <div class="table-responsive">
+                                <div class="table table-bordered" style="max-height: 800px;overflow-y: scroll">
+                                    <thead>
+                                    <tr>
+                                        <th style="width: 20%">Họ và tên</th>
+                                        <th style="width: 10%">Ngày sinh</th>
+                                        <th style="width: 30%">Nộp trường</th>
+                                        <th style="width: 10%">Trạng thái</th>
+                                        <th style="width: 30%">Nguồn</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {{#if records}}
+                                        {{#each records}}
+                                            <tr>
+                                                <td style="vertical-align: middle">{{_titleize FullName}}</td>
+                                                <td style="vertical-align: middle">{{Dob}}</td>
+                                                <td style="vertical-align: middle">{{_titleize AtSchool}}</td>
+                                                <td style="vertical-align: middle">{{getRecordStatusName selectedStatus}}</td>
+                                                <td style="vertical-align: middle">{{getSourcesNames selectedSources}}</td>
+                                            </tr>
+                                        {{/each}}
+                                    {{else}}
+                                        <tr>
+                                            <td colspan="6" class="text-center"><span class="label label-warning">Không có dữ liệu.</span></td>
+                                        </tr>
+                                    {{/if}}
+                                    </tbody>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

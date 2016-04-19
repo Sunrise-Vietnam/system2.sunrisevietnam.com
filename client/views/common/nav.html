@@ -1,0 +1,103 @@
+<template name="nav">
+    <nav class="navbar navbar-default headmenu">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="{{pathFor 'home'}}">Sunrise Vietnam</a>
+            </div>
+            <div class="collapse navbar-collapse" id="bs-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li class="{{isActiveRoute 'home'}}"><a href="{{pathFor 'home'}}"><span class="glyphicon glyphicon-th-large"></span> Trang Chủ</a></li>
+                    <li class="{{isActiveRoute 'register_records'}}"><a href="{{pathFor 'register_records'}}"><span class="glyphicon glyphicon-bookmark"></span> Khách Đăng Ký</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-cloud"></span> Triển Lãm <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            {{#if currentUser.isAdminOrManager}}
+                                <li class="{{isActiveRoute 'booking_fair'}}"><a href="{{pathFor 'booking_fair'}}"><span class="glyphicon glyphicon-flag"></span> Trường Đăng Ký</a></li>
+                            {{/if}}
+                            <li class="{{isActiveRoute 'checkin_fair'}}"><a href="{{pathFor 'checkin_fair'}}"><span class="glyphicon glyphicon-map-marker"></span> Tham Dự Triển Lãm</a></li>
+                            {{#if currentUser.isAdminOrManagerOrConsultant}}
+                            <li class="{{isActiveRoute 'fair_report'}}"><a href="{{pathFor 'fair_report'}}"><span class="glyphicon glyphicon-tasks"></span> Báo Cáo Triển Lãm</a></li>
+                            {{/if}}
+                        </ul>
+                    </li>
+
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-education"></span> Tư Vấn <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                            {{#if currentUser.isAdminOrManagerOrConsultant}}
+                                <li class="{{isActiveRoute 'customer_records'}}"><a href="{{pathFor 'customer_records'}}"><span class="glyphicon glyphicon-globe"></span> Hồ Sơ Tư Vấn</a></li>
+                            {{/if}}
+                            {{#if currentUser.isAdminOrManagerOrAccountant}}
+                                <li class="{{isActiveRoute 'customers_report'}}"><a href="{{pathFor 'customers_report'}}"><span class="glyphicon glyphicon-stats"></span> Báo Cáo Du Học</a></li>
+                            {{/if}}
+                            </ul>
+                        </li>
+
+                    {{#if currentUser.isAdmin}}
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-ice-lolly-tasted"></span> Quản Lý <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li class="{{isActiveRoute 'users_manage'}}"><a href="{{pathFor 'users_manage'}}"><span class="glyphicon glyphicon-grain"></span> QL Người Dùng</a></li>
+                                <li class="{{isActiveRoute 'events_manage'}}"><a href="{{pathFor 'events_manage'}}"><span class="glyphicon glyphicon-credit-card"></span> QL Sự Kiện</a></li>
+                                <li class="{{isActiveRoute 'register_manage'}}"><a href="{{pathFor 'register_manage'}}"><span class="glyphicon glyphicon-erase"></span> QL Hồ Sơ Đăng Ký</a></li>
+                            </ul>
+                        </li>
+                    {{/if}}
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    {{#if currentUser}}
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                               aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-user"></span> {{currentUser.displayName}} <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a  data-toggle="modal" data-target="#pwChangemodal"><span class="glyphicon glyphicon-cog"></span> Đổi mật khẩu</a></li>
+                                <li role="separator" class="divider"></li>
+                                <li><a href="#" class="btn-logout"><span class="glyphicon glyphicon-off"></span> Đăng xuất</a></li>
+                            </ul>
+                        </li>
+                    {{/if}}
+                </ul>
+            </div>
+        </div>
+    </nav>
+    {{>pwChange}}
+</template>
+<template name="pwChange">
+    <div class="modal fade" id="pwChangemodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Đổi mật khẩu</h4>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="oldPW">Mật khẩu cũ</label>
+                            <input type="password" class="form-control" id="oldPW" {{b "value: oldPW"}}>
+                        </div>
+                        <div class="form-group">
+                            <label for="newPW">Mật khẩu mới</label>
+                            <input type="password" class="form-control" id="newPW" {{b "value: newPW"}}>
+                            <span {{b "text: messagePassword"}} class="help-inline" ></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Nhập lại mật khẩu</label>
+                            <input type="password" class="form-control" id="password" {{b "value: password"}}>
+                        </div>
+                        <div class="form-group">
+                            <button type="button" class="btn btn-primary" {{b "click: changePW, enable: canChangePW"}}>Thay đổi</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

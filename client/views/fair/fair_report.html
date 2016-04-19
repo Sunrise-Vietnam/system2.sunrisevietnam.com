@@ -1,0 +1,54 @@
+<template name="fair_report">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+                <h3 class="bold dblue">
+                    Báo cáo khách đăng ký Triển lãm thế giới du học 09/2016
+                </h3>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-9 col-md-3 col-md-offset-1">
+                <select class="form-control" {{b "value: __selectedLocation"}}>
+                    <option>Tất cả</option>
+                {{#each _fairLocations}}
+                    <option value="{{valueCode}}">{{valueName}}</option>
+                {{/each}}
+                </select>
+            </div>
+            <div class="col-xs-3 col-md-2">
+                <label class="form-control">Số lượng: {{_totalRegisters}}</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-md-10 col-xs-offset-1">
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered">
+                        <thead>
+                        <tr>
+                            <th>Họ và tên</th>
+                            <th>Tham dự tại</th>
+                            <th>Đăng ký lúc</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {{#if Template.subscriptionsReady}}
+                            {{#each _regRecords}}
+                                <tr>
+                                    <td>{{regName}}</td>
+                                    <td>{{fairLocation}}</td>
+                                    <td>{{registeredAt}}</td>
+                                </tr>
+                            {{/each}}
+                        {{else}}
+                            <tr>
+                                <td colspan="3"><span class="label label-info">Đang tải dữ liệu...</span></td>
+                            </tr>
+                        {{/if}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

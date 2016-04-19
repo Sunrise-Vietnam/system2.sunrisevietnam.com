@@ -1,0 +1,254 @@
+<template name="events_manage">
+    <div>
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active">
+                <a href="#eventsManage" aria-controls="eventsManage" role="tab" data-toggle="tab" class="bold mblue">
+                    <span class="glyphicon glyphicon-credit-card"></span> QUẢN LÝ SỰ KIỆN
+                </a>
+            </li>
+            <li role="presentation">
+                <a href="#filtersManage" aria-controls="filtersManage" role="tab" data-toggle="tab" class="bold dorange">
+                    <span class="glyphicon glyphicon-paperclip"></span> QUẢN LÝ BỘ LỌC
+                </a>
+            </li>
+            <li role="presentation">
+                <a href="#valuesManage" aria-controls="valuesManage" role="tab" data-toggle="tab" class="bold lblue">
+                    <span class="glyphicon glyphicon-list"></span> QUẢN LÝ GIÁ TRỊ CỦA BỘ LỌC
+                </a>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade in active" id="eventsManage">
+                <div class="smallspace"></div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        {{#autoForm collection="Events" id="insertEventForm" type="insert"}}
+                            <fieldset>
+                                <div class="col-xs-12 col-md-5">{{> afQuickField name='eventName'}}</div>
+                                <div class="col-xs-12 col-md-2">{{> afFieldInput name='isFair'}}</div>
+                                <div class="col-xs-12">
+                                    {{> afQuickField name='filtersSet' type='hidden'}}
+                                    <div class="checkbox">
+                                        {{#each _filters}}
+                                            <div class="col-xs-4">
+                                                <label><input type="checkbox"
+                                                              class="_filtersSet" {{b "group: _filtersSet"}}
+                                                              value="{{filterCode}}">{{filterName}}</label>
+                                            </div>
+                                        {{/each}}
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 col-md-2">
+                                    <div class="smallspace"></div>
+                                    <button type="submit" class="btn btn-primary">Thêm</button>
+                                    <div class="smallspace"></div>
+                                </div>
+                            </fieldset>
+                        {{/autoForm}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-bordered">
+                                <thead>
+                                <tr class="info">
+                                    <th>Tên Sự Kiện</th>
+                                    <th>Mã Sự Kiện</th>
+                                    <th>Là Triển Lãm</th>
+                                    <th>Được Tạo Ngày</th>
+                                    <th>Được Tạo Bởi</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {{#each _events}}
+                                    {{> row_event}}
+                                {{/each}}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="filtersManage">
+                <div class="smallspace"></div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        {{#autoForm collection="Filters" id="insertFilterForm" type="insert"}}
+                            <fieldset>
+                                <div class="col-xs-12 col-md-4">{{> afQuickField name='filterName'}}</div>
+                                <div class="col-xs-12 col-md-3">{{> afQuickField name='forRegister'}}</div>
+                                <div class="col-xs-12 col-md-3">{{> afQuickField name='forCustomer'}}</div>
+                                <div class="col-xs-12 col-md-2"><button type="submit" class="btn btn-primary">Thêm</button></div>
+                            </fieldset>
+                        {{/autoForm}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-bordered">
+                                <thead>
+                                <tr class="info">
+                                    <th>Tên Bộ Lọc</th>
+                                    <th>Mã Bộ Lọc</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {{#each _filters}}
+                                    {{> row_filter}}
+                                {{/each}}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="valuesManage">
+                <div class="smallspace"></div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        {{#autoForm collection="AllValues" id="insertAllValuesForm" type="insert"}}
+                            <fieldset>
+                                <div class="col-xs-12 col-md-3">{{> afQuickField name='valueName'}}</div>
+                                <div class="col-xs-12 col-md-3">{{> afQuickField name='haveFilterCode'}}</div>
+                                <div class="col-xs-12 col-md-3">{{> afQuickField name='byBranch'}}</div>
+                                <div class="col-xs-12 col-md-2"><button type="submit" class="btn btn-primary ">Thêm</button></div>
+                            </fieldset>
+                        {{/autoForm}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-bordered">
+                                <thead>
+                                <tr class="info">
+                                    <th>Tên Giá Trị</th>
+                                    <th>Mã Giá Trị</th>
+                                    <th>Tên Bộ Lọc</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {{#each _allvalues}}
+                                    {{> row_value}}
+                                {{/each}}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template name="row_event">
+    <tr>
+        <td><a  href="#" class="_editEventModal">{{eventName}}</a></td>
+        <td>{{eventCode}}</td>
+        <td>{{isFair}}</td>
+        <td>{{createdAt}}</td>
+        <td>{{CreatedBy}}</td>
+    </tr>
+</template>
+
+<template name="modal_editEvent">
+    <div class="modal fade" id="editEventModal" tabindex="-1" role="dialog" aria-labelledby="ModalLabel">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="ModalLabel">Sửa thông tin sự kiện</h4>
+                </div>
+                <div class="modal-footer">
+                    {{#autoForm collection="Events" doc=this id="editEventForm" type="update"}}
+                        <fieldset>
+                            <div class="col-xs-12 col-md-5">{{> afQuickField name='eventName'}}</div>
+                            <div class="col-xs-12 col-md-5">{{> afQuickField name='eventCode'}}</div>
+                            <div class="col-xs-12 col-md-2">{{> afFieldInput name='isFair'}}</div>
+                            <div class="col-xs-12">
+                                {{> afFieldInput name='filtersSet' type='hidden'}}
+                                <div class="checkbox">
+                                    {{#each _filters}}
+                                        <div class="col-xs-4">
+                                            <label><input type="checkbox" value="{{filterCode}}">{{filterName}}</label>
+                                        </div>
+                                    {{/each}}
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-md-2">
+                                <div class="smallspace"></div>
+                                <button type="submit" class="btn btn-primary">Cập Nhật</button>
+                                <div class="smallspace"></div>
+                            </div>
+                        </fieldset>
+                    {{/autoForm}}
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template name="row_filter">
+    <tr>
+        <td><a href="#" class="_editFilterModal">{{filterName}}</a></td>
+        <td>{{filterCode}}</td>
+    </tr>
+</template>
+
+<template name="modal_editFilter">
+    <div class="modal fade" id="editFilterModal" tabindex="-1" role="dialog" aria-labelledby="ModalLabel">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="ModalLabel">Sửa thông tin bộ lọc</h4>
+                </div>
+                <div class="modal-footer">
+                    {{#autoForm collection="Filters" doc=this id="editFilterForm" type="update"}}
+                        <fieldset>
+                            <div class="col-xs-12 col-md-5">{{> afQuickField name='filterName'}}</div>
+                            <div class="col-xs-12 col-md-5">{{> afQuickField name='filterCode'}}</div>
+                            <div class="col-xs-12 col-md-5">{{> afQuickField name='forRegister'}}</div>
+                            <div class="col-xs-12 col-md-5">{{> afQuickField name='forCustomer'}}</div>
+                            <div class="col-xs-12 col-md-2"><button type="submit" class="btn btn-primary">Cập Nhật</button></div>
+                        </fieldset>
+                    {{/autoForm}}
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template name="row_value">
+    <tr>
+        <td><a href="#" class="_editValueModal">{{valueName}}</a></td>
+        <td>{{valueCode}}</td>
+        <td>{{FilterName}}</td>
+    </tr>
+</template>
+
+<template name="modal_editValue">
+    <div class="modal fade" id="editValueModal" tabindex="-1" role="dialog" aria-labelledby="ModalLabel">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="ModalLabel">Sửa thông tin giá trị của bộ lọc</h4>
+                </div>
+                <div class="modal-footer">
+                    {{#autoForm collection="AllValues" doc=this id="editValueForm" type="update"}}
+                        <fieldset>
+                            <div class="col-xs-12 col-md-5">{{> afQuickField name='valueName'}}</div>
+                            <div class="col-xs-12 col-md-3">{{> afQuickField name='haveFilterCode'}}</div>
+                            <div class="col-xs-12 col-md-3">{{> afQuickField name='byBranch'}}</div>
+                            <div class="col-xs-12 col-md-2"><button type="submit" class="btn btn-primary">Cập Nhật</button></div>
+                        </fieldset>
+                    {{/autoForm}}
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+

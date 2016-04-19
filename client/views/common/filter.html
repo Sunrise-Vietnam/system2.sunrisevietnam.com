@@ -1,0 +1,10 @@
+<template name="slt_filter">
+    <label>{{filter.filterName}}</label>
+    <select class="form-control">
+        <option>Tất cả</option>
+        {{#each filter.getValues}}
+            <option value="{{valueCode}}">{{valueName}}</option>
+        {{/each}}
+    </select>
+    <div class="smallspace"></div>
+</template>

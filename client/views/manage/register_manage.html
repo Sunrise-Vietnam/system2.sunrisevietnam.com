@@ -1,0 +1,40 @@
+<template name="register_manage">
+    <div class="row">
+        <div class="col-xs-12">
+            <h3 class="dblue bold">Xử Lý Yêu Cầu Xoá</h3>
+            <div class="smallspace"></div>
+        </div>
+        <div class="col-xs-12">
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead>
+                    <tr class="info">
+                        <th>Người Đăng Ký</th>
+                        <th>Người Yêu Cầu Xoá</th>
+                        <th>Ngày Yêu Cầu Xoá</th>
+                        <th>Lý Do Xoá</th>
+                        <th>Xoá</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {{#each _delRequest}}
+                        {{> row_request}}
+                    {{/each}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template name="row_request">
+    <tr>
+        <td>{{regName}}</td>
+        <td>{{updatedBy}}</td>
+        <td>{{updatedAt}}</td>
+        <td>{{delReason}}</td>
+        <td><a type="button" class="btn btn-sm btn-danger" {{b "click: delReg"}}>Xoá</a></td>
+    </tr>
+</template>
+
+

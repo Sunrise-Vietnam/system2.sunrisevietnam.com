@@ -1,0 +1,284 @@
+<template name="customers_report">
+    <div class="row row-input">
+        <div class="col-md-3">
+            <select class="form-control" {{b "value: selectedConsultant"}}>
+                <option value="all">Tất cả tư vấn</option>
+                {{#each getConsultant}}
+                    <option value="{{id}}">{{value}}</option>
+                {{/each}}
+            </select>
+        </div>
+        <div class="col-md-2">
+            <select class="form-control" {{b "value:selectedState"}} {{__disabledStateByAccountant}}>
+                <option value="all">Tất cả trạng thái</option>
+                {{#each getState}}
+                    <option value="{{valueCode}}">{{valueName}}</option>
+                {{/each}}
+            </select>
+        </div>
+        <div class="col-md-3">
+            <input type="text" class="form-control" name="daterange"/>
+        </div>
+        <div class="col-md-3">
+            <button class="btn btncopy" {{b "click : testSelected"}}>Copy</button>
+        </div>
+    </div>
+    <div class="row row-input">
+        <div class="col-md-12">
+            <br/>
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                    {{#if currentUser.isAdminOrAccountant}}
+                        <th class="td-record-normal"><input type="checkbox" name="checkAll" {{b "click:checkAllRecords"}}/></th>
+                    {{/if}}
+                    <th class="td-record-normal">Họ và tên</th>
+                    <th class="td-record-normal">Ngày sinh</th>
+                    <th class="td-record-normal">Nộp trường</th>
+                    {{#if currentUser.isAdminOrAccountant}}
+                        <th class="td-record-normal">ID nhập học</th>
+                        <th class="td-record-normal">Ngày nhập học</th>
+                        <th class="td-record-normal">Ngày kết thúc</th>
+                    {{else}}
+                        <th class="td-record-normal">Trạng thái</th>
+                        <th class="td-record-normal">Nguồn</th>
+                    {{/if}}
+                    <th class="td-record-normal">Tư vấn</th>
+                    <th class="td-record-normal"></th>
+                    </thead>
+                    <tbody>
+                    {{#each _cusReport}}
+                        {{> row_cusReport}}
+                    {{/each}}
+                    {{#if Template.subscriptionsReady}}
+                        {{#if _hasMoreRecords}}
+                            <tr>
+                                <td colspan="9" class="text-center"><button class="btn btn-default" {{b "click : _loadMoreRecords"}}>Tải thêm</button></td>
+                            </tr>
+                        {{/if}}
+                    {{else}}
+                        <tr>
+                            <td colspan="9" class="text-center"><span class="label label-info">Đang tải dữ liệu...</span></td>
+                        </tr>
+                    {{/if}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template name="row_cusReport">
+    <tr>
+        {{#if currentUser.isAccountant}}
+        <td class="td-record-normal"><input class="chkRecord" type="checkbox" value="{{_id}}"/></td>
+        {{/if}}
+        <td class="td-record-normal">{{_titleize customerName}}</td>
+        <td class="td-record-normal">{{DOB}}</td>
+        <td class="td-record-normal">{{_titleize regSchool}}</td>
+        {{#if currentUser.isAccountant}}
+        <td class="td-record-normal">{{admissionID}}</td>
+        <td class="td-record-normal">{{humanDate admissionStartDate true}}</td>
+        <td class="td-record-normal">{{humanDate admissionEndDate true}}</td>
+        {{else}}
+        <td class="td-record-normal">{{getRecordStatusName selectedState}}</td>
+        <td class="td-record-normal">{{getSourcesNames selectedSources}}</td>
+        {{/if}}
+        <td class="td-record-normal">{{getFullNameOfUser updatedBy}}</td>
+        <td class="td-record-normal">
+            <button class="btn btn-sm btn-warning _recordDetailModal">
+                <span class="glyphicon glyphicon-zoom-in"></span>
+            </button>
+        </td>
+    </tr>
+</template>
+
+<template name="modal_cusDetail">
+    <div class="modal fade" id="cusDetailModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li role="presentation" class="active"><a href="#cusInfo" aria-controls="cusInfo" role="tab" data-toggle="tab">Thông tin học sinh</a></li>
+                            <li role="presentation"><a href="#admInfo" aria-controls="admInfo" role="tab" data-toggle="tab">Thông tin nhập học</a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div role="tabpanel" class="tab-pane active" id="cusInfo">
+                                <div class="row row-input">
+                                    <div class="col-md-9">
+                                        <b>{{cusName}}</b> &nbsp; {{Dob}}
+                                    </div>
+                                </div>
+                                <div class="row row-input">
+                                    <div class="col-md-12">
+                                        <b>Email:</b>{{Email}} &nbsp; <b>Điện thoại:</b>&nbsp; {{Phone}}
+                                    </div>
+                                </div>
+                                <div class="row row-input">
+                                    <div class="col-md-9">
+                                        <b>Địa chỉ:</b>{{Address}}
+                                    </div>
+                                </div>
+                                <div class="row row-input">
+                                    <div class="col-md-9">
+                                        {{SchoolName}} &nbsp; {{ClassName}}
+                                    </div>
+                                </div>
+                                <div class="row row-input">
+                                    <div class="col-md-9">
+                                        <b>Nộp trường:</b> {{AtSchool}} &nbsp; {{Country}}
+                                    </div>
+                                </div>
+                                <div class="row row-input">
+                                    <div class="col-md-9">
+                                        <b>Chương trình:</b> &nbsp; {{getRecordPrograms selectedPrograms}}
+                                    </div>
+                                </div>
+                                <div class="row row-input">
+                                    <div class="col-md-9">
+                                        <b>Trạng thái:</b> &nbsp; {{getRecordStatusName selectedStatus}}
+                                    </div>
+                                </div>
+                                <div class="row row-input">
+                                    <div class="col-md-9">
+                                        <b>Nguồn:</b> &nbsp; {{getSourcesNames selectedSources}}
+                                    </div>
+                                </div>
+                                {{#if ExtraInfo}}
+                                    <div class="row row-input">
+                                        <div class="col-md-12">
+                                            <b>Thông tin phụ huynh:</b> <br/>
+                                            <div class="table-responsive">
+                                                <table class="table">
+                                                    <thead>
+                                                    <tr>
+                                                        <th>Họ và tên</th>
+                                                        <th>Email</th>
+                                                        <th>Số điện thoại</th>
+                                                        <th>Địa chỉ/Công tác</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    {{#each ExtraInfo}}
+                                                        <tr>
+                                                            <td><b>{{FullName}}</b></td>
+                                                            <td>{{Email}}</td>
+                                                            <td>{{Phone}}</td>
+                                                            <td>{{Address}}</td>
+                                                        </tr>
+                                                    {{/each}}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {{/if}}
+                            </div>
+                            <div role="tabpanel" class="tab-pane" id="thong-tin-nhap-hoc">
+                                <div class="row row-input">
+                                    <div class="col-md-12">
+                                        <b>ID nhập học: </b> &nbsp; {{Admission_ID}}
+                                    </div>
+                                </div>
+                                <div class="row row-input">
+                                    <div class="col-md-12">
+                                        <b>Ngày nhập học:</b> &nbsp; {{humanDate Admission_startDate true}} &nbsp; <b>Ngày kết thúc:</b> &nbsp; {{humanDate Admission_endDate true}}
+                                    </div>
+                                </div>
+                                {{#if Admission_Courses}}
+                                    <div class="row row-input">
+                                        <div class="col-md-12">
+                                            <div class="table-responsive">
+                                                <table class="table">
+                                                    <thead>
+                                                    <tr>
+                                                        <th style="width: 60%">Khoá học/Chi phí</th>
+                                                        <th style="width: 40%" class="td-record-value">Chi phí</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    {{#each Admission_Courses}}
+                                                        <tr>
+                                                            <td>{{Name}}</td>
+                                                            <td class="td-record-value">{{Fee}} {{_Unit}}</td>
+                                                        </tr>
+                                                    {{/each}}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {{/if}}
+                                <div class="row">
+                                    <div class="col-md-9">
+                                        <b>Thông tin liên hệ trường:</b><br/>
+                                        {{Admission_contactSchool}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template name="modal_copyCustomer">
+    {{#if currentUser.isAccountant}}
+        <div class="modal fade" id="copyCustomerModal" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title"></h4>
+                    </div>
+                    <div class="modal-body">
+                        <div style="height: 500px;overflow:auto;">
+                            <table class="table table-bordered table-striped" id="tblRecords" cellspacing="2" cellpadding="10">
+                                {{#each _cusReport}}
+                                    <tr>
+                                        <td style="border: 1px solid #000000">{{cusName}}</td>
+                                        <td style="border: 1px solid #000000">{{Dob}}</td>
+                                        <td style="border: 1px solid #000000">{{admissionID}}</td>
+                                        <td style="border: 1px solid #000000">{{displayCourses admissionCourses}}</td>
+                                        <td style="border: 1px solid #000000">{{_titleize regSchool}}</td>
+                                        <td style="border: 1px solid #000000">{{schoolCountry}}</td>
+                                        <td style="border: 1px solid #000000"></td>
+                                        <td style="border: 1px solid #000000"></td>
+                                        <td style="border: 1px solid #000000"></td>
+                                        <td style="border: 1px solid #000000"></td>
+                                        <td style="border: 1px solid #000000"></td>
+                                        <td style="border: 1px solid #000000"></td>
+                                        <td style="border: 1px solid #000000"></td>
+                                        <td style="border: 1px solid #000000">{{admissionStartDate}}</td>
+                                        <td style="border: 1px solid #000000">{{admissionEndDate}}</td>
+                                        <td style="border: 1px solid #000000">{{selectedStatus}}</td>
+                                        <td style="border: 1px solid #000000">{{displayFee admissionCourses}}</td><!--hocphi-->
+                                        <td style="border: 1px solid #000000"></td><!--tienano-->
+                                        <td style="border: 1px solid #000000"></td><!--gioithieu-->
+                                        <td style="border: 1px solid #000000">{{Email}}</td>
+                                        <td style="border: 1px solid #000000">{{Admission_contactSchool}}</td>
+                                        <td style="border: 1px solid #000000"></td><!--diachi-->
+                                        <td style="border: 1px solid #000000"></td><!--dienthoai-->
+                                        <td style="border: 1px solid #000000"></td><!--hoten-->
+                                        <td style="border: 1px solid #000000">{{Address}}</td><!--diachi-->
+                                        <td style="border: 1px solid #000000"></td><!--dienthoai-->
+                                        <td style="border: 1px solid #000000"></td><!--email-->
+                                        <td style="border: 1px solid #000000"></td><!--nghenghiep-->
+                                    </tr>
+                                {{/each}}
+                            </table>
+                        </div>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div>
+    {{/if}}
+</template>

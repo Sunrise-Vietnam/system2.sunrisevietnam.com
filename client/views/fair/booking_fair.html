@@ -1,0 +1,133 @@
+<template name="booking_fair">
+    <div class="row">
+        <div class="col-xs-12 col-md-8">
+            <h3 class="dblue bold">Danh sách trường đăng ký tham dự triển lãm</h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+                {{> quickForm collection="BookingFair" id="insertBookingForm" type="insert"}}
+        </div>
+    </div>
+    <div class="row row-input">
+        <div class="col-xs-12">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>Loại</th>
+                        <th>Tên trường</th>
+                        <th>Người liên hệ</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Đăng ký lúc</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {{#each _bookfair}}
+                        {{> row_inst}}
+                    {{/each}}
+                    {{#if Template.subscriptionsReady}}
+                        {{#if _hasMoreRegisters}}
+                            <tr>
+                                <td colspan="8" class="text-center"><button class="btn btn-default" {{b "click : _loadMoreRegisters"}}>Tải thêm</button></td>
+                            </tr>
+                        {{/if}}
+                    {{else}}
+                        <tr>
+                            <td colspan="8" class="text-center"><span class="label label-info">Đang tải dữ liệu...</span></td>
+                        </tr>
+                    {{/if}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template name="row_inst">
+    <tr>
+        <td class="td-record-normal">{{instType}}</td>
+        <td class="td-record-normal">{{instName}}</td>
+        <td class="td-record-normal">{{contactPerson}}</td>
+        <td class="td-record-normal">{{instEmail}}</td>
+        <td class="td-record-normal">{{instTel}}</td>
+        <td class="td-record-normal">{{insertedAt}}</td>
+        <td class="td-record-normal">
+            <button class="btn btn-warning btn-sm _bookingFairModal">
+                <span class="glyphicon glyphicon-zoom-in"></span>
+            </button>
+        </td>
+    </tr>
+</template>
+
+<template name="modal_bookingFair">
+    <div class="modal fade" id="bookingFairModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="ModalLabel">Thông tin trường đăng ký</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row row-input">
+                        <div class="col-xs-12">
+                            <b>Loại :</b> {{instType}}
+                        </div>
+                    </div>
+                    <div class="row row-input">
+                        <div class="col-xs-12">
+                            <b>Tên trường / trung tâm :</b> {{instName}}
+                        </div>
+                    </div>
+                    <div class="row row-input">
+                        <div class="col-xs-12">
+                            <b>Người liên hệ :</b> {{contactPerson}}
+                        </div>
+                    </div>
+                    <div class="row row-input">
+                        <div class="col-xs-12 col-md-6">
+                            <b>Email :</b> {{instEmail}}
+                        </div>
+                        <div class="col-xs-12 col-md-6">
+                            <b>Số điện thoại :</b> {{instTel}}
+                        </div>
+                        {{#if instWeb}}
+                        <div class="col-xs-12 col-md-6">
+                            <b>Website : </b> {{instWeb}}
+                        </div>
+                        {{/if}}
+                        {{#if instFax}}
+                        <div class="col-xs-12 col-md-6">
+                            <b>Fax : </b> {{instFax}}
+                        </div>
+                        {{/if}}
+                    </div>
+                    <div class="row row-input">
+                        <div class="col-xs-12">
+                            <div class="table-responsive">
+                                <div class="table table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th>Địa điểm</th>
+                                        <th>Thời gian</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {{#each attendFair}}
+                                        <tr>
+                                            <td>{{name}}</td>
+                                            <td>{{date}}</td>
+                                        </tr>
+                                    {{/each}}
+                                    </tbody>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

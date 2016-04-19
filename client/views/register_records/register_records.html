@@ -1,0 +1,257 @@
+<template name="register_records">
+    <div class="row">
+        <div class="col-xs-12 col-md-6">
+            <h3 class="dblue bold">Danh Sách Đăng Ký</h3>
+        </div>
+        <div class="col-xs-12 col-md-2">
+            <h3><h4><label class="label label-primary">Số lượng: {{quantity}}</label></h4></h3>
+        </div>
+        <div class="col-xs-12 col-md-2">
+            <h3><h4><label class="label label-danger">Chưa liên hệ: {{notcalled}}</label></h4></h3>
+        </div>
+        <div class="col-xs-12 col-md-2">
+            <h3><a type="button" class="btn btn-success _insertReg"><span class="glyphicon glyphicon-plus"></span> Thêm</a></h3>
+        </div>
+    </div>
+    <hr/>
+    <div class="row">
+        <div class="col-xs-12 col-md-3">
+            <label>Kênh đăng ký</label>
+            <select class="form-control filterByCate">
+                <option>Tất cả</option>
+                {{#each _categories}}
+                <option value="{{valueCode}}">{{valueName}}</option>
+                {{/each}}
+            </select>
+            <div class="smallspace"></div>
+        </div>
+        <div class="col-xs-12 col-md-4">
+            <label>Sự kiện</label>
+            <select class="form-control filterByEvent">
+                <option>Tất cả</option>
+                {{#each _events}}
+                <option value="{{eventCode}}">{{eventName}}</option>
+                {{/each}}
+            </select>
+            <div class="smallspace"></div>
+        </div>
+        <div class="col-xs-12 col-md-5">
+            <label>Thời gian</label>
+            <input type="text" name="daterange" class="form-control" placeholder="Khoảng Thời Gian"/>
+            <div class="smallspace"></div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12 col-md-2">
+            <label>Telesaler</label>
+            <select class="form-control filterUpdatedBy">
+                <option>Tất cả</option>
+                {{#each _updatedBy}}
+                    <option value="{{_id}}">{{profile.fullname}}</option>
+                {{/each}}
+            </select>
+            <div class="smallspace"></div>
+        </div>
+        {{#each _filters}}
+        <div class="col-xs-12 col-md-2">
+            {{>slt_filter filterCode}}
+        </div>
+        {{/each}}
+        {{#if _isFair}}
+        <div class="col-xs-12 col-md-2">
+            <label>Địa điểm triển lãm</label>
+            <select class="form-control filterByFairLoca">
+                <option>Tất cả</option>
+                {{#each _fairLocation}}
+                    <option value="{{valueCode}}">{{valueName}}</option>
+                {{/each}}
+            </select>
+        </div>
+        <div class="col-xs-12 col-md-2">
+            <label>Tham gia triển lãm</label>
+            <label>
+                <input type="checkbox" class="filterByAttend"/> Đã tham gia
+            </label>
+        </div>
+        {{/if}}
+    </div>
+    <hr/>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="table-responsive" style="overflow-x: scroll">
+                <table class="table table-striped table-bordered">
+                    <thead>
+                    <tr>
+                        <th>Họ và tên</th>
+                        <th style="width: 10% !important;">Địa chỉ</th>
+                        <th>Email</th>
+                        <th>Số điện thoại</th>
+                        <th>Khoá học</th>
+                        <th>Trạng thái</th>
+                        <th>Ghi chú</th>
+                        <th>Tư vấn</th>
+                        <th class="text-center">Xoá</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {{#each _regRecords}}
+                        {{> row_regRecord}}
+                    {{/each}}
+                    {{#if Template.subscriptionsReady}}
+                        {{#if hasMoreRegisters}}
+                            <tr>
+                                <td colspan="8" class="text-center"><button class="btn btn-default" {{b "click : loadMoreRegisters"}}>Tải thêm</button></td>
+                            </tr>
+                        {{/if}}
+                    {{else}}
+                        <tr>
+                            <td colspan="8" class="text-center"><span class="label label-info">Đang tải dữ liệu...</span></td>
+                        </tr>
+                    {{/if}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template name="modal_insertReg">
+    <div class="modal fade" id="insertRegModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Thêm người đăng ký mới</h4>
+                </div>
+                <div class="modal-footer">
+                    {{#autoForm collection="RegisterRecords" id="insertRegRecordsForm" type="insert"}}
+                        {{> form_register}}
+                        <div class="col-xs-6 col-md-2">
+                            <button type="submit" class="btn btn-primary"> Thêm</button>
+                        </div>
+                        <div class="col-xs-6 col-md-2">
+                            <button type="reset" class="btn btn-default mblue"> Làm mới</button>
+                        </div>
+                    {{/autoForm}}
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template name="modal_editReg">
+    <div class="modal fade" id="editRegModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Cập nhật người đăng ký</h4>
+                </div>
+                <div class="modal-footer">
+                    {{#autoForm collection="RegisterRecords" doc=this id="editRegRecordsForm" type="update"}}
+                        {{> form_register}}
+                        <div class="col-xs-6 col-md-2">
+                            <button type="submit" class="btn btn-primary"> Cập nhật</button>
+                        </div>
+                        <div class="col-xs-6 col-md-2">
+                            <button type="button" data-dismiss="modal" class="btn btn-default mblue"> Huỷ</button>
+                        </div>
+                    {{/autoForm}}
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template name="form_register">
+    <fieldset>
+        <div class="col-xs-12 col-md-8">{{> afQuickField name='regName'}}</div>
+        <div class="col-xs-12 col-md-4">{{> afQuickField name='phone'}}</div>
+    </fieldset>
+    <fieldset>
+        <div class="col-xs-12 col-md-4">{{> afQuickField name='email'}}</div>
+        <div class="col-xs-12 col-md-4">{{> afQuickField name='identity'}}</div>
+        <div class="col-xs-12 col-md-4">{{> afQuickField name='city'}}</div>
+    </fieldset>
+    <fieldset>
+        <div class="col-xs-12 col-md-7">{{> afQuickField name='eventcode'}}</div>
+        <div class="col-xs-12 col-md-5">{{> afQuickField name='catecode'}}</div>
+    </fieldset>
+    <fieldset>
+        <div class="col-xs-12 col-md-3">
+            <label>Đã tham dự triển lãm</label>
+            {{> afQuickField name='attendedAt'}}
+        </div>
+        <div class="col-xs-12 col-md-3">{{> afQuickField name='fairLocation'}}</div>
+        <div class="col-xs-12 col-md-3">{{> afQuickField name='regTime'}}</div>
+        <div class="col-xs-12 col-md-3">{{> afQuickField name='regStudy'}}</div>
+    </fieldset>
+    <fieldset>
+        <div class="col-xs-12 col-md-6">{{> afFormGroup name='regCourse'}}</div>
+        <div class="col-xs-12 col-md-6">{{> afFormGroup name='regCountry'}}</div>
+        <div class="col-xs-12 col-md-6">{{> afFormGroup name='knownBy'}}</div>
+        <div class="col-xs-12 col-md-6">{{> afFormGroup name='status'}}</div>
+        <div class="col-xs-12">{{> afQuickField name='note'}}</div>
+    </fieldset>
+    <div class="col-xs-6 col-md-3">
+        <a class="btn btn-success"><span class="glyphicon glyphicon-export" {{b 'click: copyRecord, enable: canCopyRecord'}}></span> Chuyển sang tư vấn</a>
+    </div>
+</template>
+
+<template name="row_regRecord">
+    <tr>
+        <td><a href="#" class="_editRegModal">{{regName}}</a></td>
+        <td>{{City}}</td>
+        <td>{{email}}</td>
+        <td>{{phone}}</td>
+        {{#if _isFair}}
+        <td>{{fairLocation}}</td>
+        {{else}}
+        <td>{{RegCourse}}</td>
+        {{/if}}
+        <td>{{Status}}</td>
+        <td>{{note}}</td>
+        <td>{{UpdatedBy}}</td>
+        <td class="text-center"><a class="mgray _delRequestModal"><span class="glyphicon glyphicon-trash"></span></a></td>
+    </tr>
+</template>
+
+<template name="modal_delRequest">
+    <div class="modal fade" id="delRequestModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title red" id="myModalLabel">Yêu cầu xoá</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <p>Lý do xoá:</p>
+                            <div class="radio">
+                                <label><input type="radio" name="delReason" id="delReason1" value="Thông tin không chính xác"/> Thông tin không chính xác</label>
+                            </div>
+                            <div class="radio">
+                                <label><input type="radio" name="delReason" id="delReason2" value="Khách hàng bị lặp"/> Khách hàng bị lặp</label>
+                            </div>
+                            <div class="radio">
+                                <label><input type="radio" name="delReason" id="delReason3"/> Lý do khác</label>
+                            </div>
+                            {{#if _enable}}
+                            <input type="text" id="reason3"/>
+                            {{/if}}
+                        </div>
+                        <div class="col-xs-12">
+                            <hr/>
+                            <p>Bạn không thể xoá trực tiếp. Yêu cầu xoá của bạn sẽ được tiếp nhận và xử lý sau.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Huỷ</button>
+                    <button type="button" class="btn btn-primary" {{b "click: sendDelQuest, enable: canSendQuest"}}>Gửi</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

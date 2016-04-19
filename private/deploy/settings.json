@@ -1,0 +1,37 @@
+{
+  "public": {
+    "roles": [
+      {
+        "key": "admin",
+        "value": "Quản Trị Viên"
+      },
+      {
+        "key": "consultant",
+        "value": "Tư Vấn Viên"
+      },
+      {
+        "key": "manager",
+        "value": "Quản lý"
+      },
+      {
+        "key": "accountant",
+        "value": "Kế toán"
+      },
+      {
+        "key": "supporter",
+        "value": "Hỗ Trợ Viên"
+      }
+    ]
+  },
+  "private": {
+    "users": [
+      {
+        "username": "phanh",
+        "password": "123",
+        "roles": ["admin"],
+        "email": "abc@gmail.com",
+        "fullname": "Phương Anh"
+      }
+    ]
+  }
+}
