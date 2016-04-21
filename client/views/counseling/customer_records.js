@@ -8,6 +8,9 @@ Template.customer_records.viewmodel({
     _cusRecords: function () {
         return CustomerRecords.find(this.params(), {limit: this.loaded()})
     },
+    _potentialRecords: function () {
+        return CustomerRecords.find({havePotential:true}, {limit: this.loaded()}, {sort: {updatedAt: -1}})
+    },
     _insertCustomer: function (e) {
         e.preventDefault();
         var modalId = Blaze.renderWithData(Template.modal_insertCustomer, null, document.getElementsByTagName('body')[0]);
@@ -30,6 +33,7 @@ Template.customer_records.viewmodel({
     },
     params : function(){
         var params = {updatedBy: Meteor.userId()};
+        params = _.extend(params, {havePotential:false})
         return params;
     },
 
@@ -60,13 +64,22 @@ Template.row_cusRecord.viewmodel({
     _isDraftClass: function () {
         return (this._isDraft()) ? 'td-record-draft' : '';
     },
-    _canModifier: function () {
-        return this.data().updatedBy === Meteor.userId();
-    },
     events : {
         'click ._editCustomer' : function(){
             var modalId = Blaze.renderWithData(Template.modal_editCustomer, this.templateInstance.data, document.getElementsByTagName('body')[0]);
             $('#editCustomerModal').modal('show').on('hidden.bs.modal', function (e) {
+                Blaze.remove(modalId);
+            });
+        },
+        'click ._unFollowCustomer' : function(){
+            var modalId = Blaze.renderWithData(Template.modal_unFollowCustomer, this.templateInstance.data, document.getElementsByTagName('body')[0]);
+            $('#unFollowCustomerModal').modal('show').on('hidden.bs.modal', function (e) {
+                Blaze.remove(modalId);
+            });
+        },
+        'click ._delCustomer' : function(){
+            var modalId = Blaze.renderWithData(Template.modal_delCustomer, this.templateInstance.data, document.getElementsByTagName('body')[0]);
+            $('#delCustomerModal').modal('show').on('hidden.bs.modal', function (e) {
                 Blaze.remove(modalId);
             });
         }
@@ -271,7 +284,43 @@ Template.modal_insertCustomer.viewmodel({
 
 Template.modal_editCustomer.viewmodel({
 
-})
+});
+
+Template.modal_unFollowCustomer.viewmodel({
+     unFollow: function () {
+         var recordID = this.templateInstance.data._id;
+         Meteor.call('unFollowCustomer', recordID, function (err, result) {
+             if (err) {
+                 console.error(err)
+             }
+             else {
+                 $('#unFollowCustomerModal').modal('hide');
+                 $.notify("Đã bỏ theo dõi khách hàng", {
+                     className: 'info',
+                     position: 'right bottom'
+                 });
+             }
+         })
+     }
+});
+
+Template.modal_delCustomer.viewmodel({
+    delCustomer: function () {
+        var recordID = this.templateInstance.data._id;
+        Meteor.call('deleteCustomer', recordID, function (err, result) {
+            if (err) {
+                console.error(err)
+            }
+            else {
+                $('#delCustomerModal').modal('hide');
+                $.notify("Đã xoá khách hàng", {
+                    className: 'info',
+                    position: 'right bottom'
+                });
+            }
+        })
+    }
+});
 
 Template.form_customer.viewmodel({
     _parentsInfo: [],
@@ -329,5 +378,18 @@ Template.row_admissionCourse.viewmodel({
 })
 
 Template.row_potentialList.viewmodel({
-
+    follow: function(){
+        var recordID = this.templateInstance.data._id;
+        Meteor.call('followCustomer', recordID, function (err, result) {
+            if (err) {
+                console.error(err)
+            }
+            else {
+                $.notify("Đã theo dõi khách hàng", {
+                    className: 'success',
+                    position: 'right bottom'
+                });
+            }
+        })
+    }
 })

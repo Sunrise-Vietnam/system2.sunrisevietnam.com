@@ -148,6 +148,10 @@ Template.register_records.viewmodel({
 });
 
 Template.row_regRecord.viewmodel({
+    _haveDelQuest: function () {
+        if (this.templateInstance.data.delQuest == true)
+            return true
+    },
     events: {
         'click ._editRegModal': function () {
             var modalId = Blaze.renderWithData(Template.modal_editReg, this.templateInstance.data, document.getElementsByTagName('body')[0]);
@@ -160,6 +164,20 @@ Template.row_regRecord.viewmodel({
             $('#delRequestModal').modal('show').on('hidden.bs.modal', function (e) {
                 Blaze.remove(modalId);
             });
+        },
+        'click ._cancelDelQuest': function () {
+            var regID = this.templateInstance.data._id;
+            Meteor.call('cancelDelQuest', regID, function (err, result) {
+                if (err) {
+                    console.error(err)
+                }
+                else {
+                    $.notify("Đã huỷ yêu cầu xoá", {
+                        className: 'info',
+                        position: 'right bottom'
+                    });
+                }
+            })
         }
     }
 });
@@ -201,28 +219,41 @@ Template.modal_delRequest.viewmodel({
     register: function () {
         return this.templateInstance.data;
     },
-    _enable: function () {
-        if ($('input[id="delReason3"]').prop('checked'))
-            return true
-    },
+    enableDel: false,
+    delReason: '',
+    otherDelReason: '',
     canSendQuest: function () {
-        //if($('input[type=radio]').prop('checked'))
-        return true
+        if (this.delReason() || this.otherDelReason()) {
+            return true
+        }
     },
     sendDelQuest: function () {
         if (this.canSendQuest()) {
-            var regID = this.register()._id;
-            Meteor.call('addDelQuest', regID, function (err, result) {
+            var reg = this.register();
+            var deleteReason = '';
+            if (this.delReason()) {
+                deleteReason = this.delReason();
+                console.log(deleteReason);
+                //return deleteReason
+            }
+            if (this.otherDelReason()) {
+                deleteReason = this.otherDelReason();
+                console.log(deleteReason);
+                //return deleteReason
+            }
+            Meteor.call('addDelQuest', reg, deleteReason, function (err) {
                 if (err) {
                     console.error(err)
                 }
-                else if (result) {
-                    console.info("Success")
+                else {
+                    $('#delRequestModal').modal('hide');
+                    $.notify("Đã gửi yêu cầu xoá", {
+                        className: 'info',
+                        position: 'right bottom'
+                    });
                 }
             })
         }
 
     }
 });
-
-Template.form_register.viewmodel({})

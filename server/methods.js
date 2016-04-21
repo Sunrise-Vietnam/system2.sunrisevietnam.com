@@ -67,13 +67,31 @@ if(Meteor.isServer){
                 console.log(ex)
             }
         },
-        addDelQuest: function (regID) {
+        cancelDelQuest: function (regID) {
             try {
                 var updatedAt = new Date(),
                     updatedBy = this.userID;
                 RegisterRecords.update({_id: regID}, {
                     $set: {
+                        delQuest: false,
+                        updatedAt: updatedAt,
+                        updatedBy: updatedBy
+                    }
+                })
+            }
+            catch (ex) {
+                console.log(ex)
+            }
+        },
+        addDelQuest: function (reg, deleteReason) {
+            try {
+                var updatedAt = new Date(),
+                    updatedBy = this.userID,
+                    deleteReason = deleteReason;
+                RegisterRecords.update({_id: reg._id}, {
+                    $set: {
                         delQuest: true,
+                        deleteReason: deleteReason,
                         updatedAt: updatedAt,
                         updatedBy: updatedBy
                     }
@@ -87,6 +105,39 @@ if(Meteor.isServer){
             try {
                 var reg = regID;
                 RegisterRecords.remove({_id: reg})
+            }
+            catch (ex) {
+                console.log(ex)
+            }
+        },
+        followCustomer: function (recordID) {
+            try {
+                CustomerRecords.update({_id: recordID}, {
+                    $set: {
+                        havePotential: false
+                    }
+                })
+            }
+            catch (ex) {
+                console.log(ex)
+            }
+        },
+        unFollowCustomer: function (recordID) {
+            try {
+                CustomerRecords.update({_id: recordID}, {
+                    $set: {
+                        havePotential: true
+                    }
+                })
+            }
+            catch (ex) {
+                console.log(ex)
+            }
+        },
+        deleteCustomer: function (recordID) {
+            try {
+                var record = recordID;
+                CustomerRecords.remove({_id: record})
             }
             catch (ex) {
                 console.log(ex)

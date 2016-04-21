@@ -27,8 +27,8 @@
                     </thead>
                     <tbody>
                     {{#if Template.subscriptionsReady}}
-                        {{#each _getBranches}}
-                            {{> records_treeGrid_level_1}}
+                        {{#each _branches}}
+                            {{> row_branchLevel1}}
                         {{/each}}
                     {{else}}
                         <tr>
@@ -43,6 +43,7 @@
     <div class="space"></div>
     {{> regReport}}
 </template>
+
 <template name="regReport">
     <div class="row">
         <div class="col-xs-12"><h3 class="dblue bold">Tổng kết người đăng ký</h3></div>
@@ -80,40 +81,40 @@
     </tr>
 </template>
 
-<template name="records_treeGrid_level_1">
+<template name="row_branchLevel1">
     <tr class="{{className}}" style="font-weight: bold">
-        <td>{{value}}</td>
-        <td class="td-record-value">{{getValueOfStatusAtBranch '_DANG-CHUAN-BI'}}</td>
-        <td class="td-record-value">{{getValueOfStatusAtBranch '_KY-HOP-DONG'}}</td>
-        <td class="td-record-value">{{getValueOfStatusAtBranch '_DANG-CHO-VISA'}}</td>
-        <td class="td-record-value">{{getValueOfStatusAtBranch '_DO-VISA'}}</td>
-        <td class="td-record-value">{{getValueOfStatusAtBranch '_TRUOT-VISA'}}</td>
-        <td class="td-record-value">{{getValueOfStatusAtBranch '_DA-NHAP-HOC'}}</td>
+        <td>{{valueName}}</td>
+        <td class="td-record-value">{{getValueOfStateAtBranch '_DANG-CHUAN-BI'}}</td>
+        <td class="td-record-value">{{getValueOfStateAtBranch '_KY-HOP-DONG'}}</td>
+        <td class="td-record-value">{{getValueOfStateAtBranch '_DANG-CHO-VISA'}}</td>
+        <td class="td-record-value">{{getValueOfStateAtBranch '_DO-VISA'}}</td>
+        <td class="td-record-value">{{getValueOfStateAtBranch '_TRUOT-VISA'}}</td>
+        <td class="td-record-value">{{getValueOfStateAtBranch '_DA-NHAP-HOC'}}</td>
     </tr>
-    {{#each getUsers}}
-        {{> records_treeGrid_level_2}}
+    {{#each getConsultants}}
+        {{> row_branchLevel2}}
     {{/each}}
 </template>
 
-<template name="records_treeGrid_level_2">
+<template name="row_branchLevel2">
     <tr class="{{className}}">
         <td>
-            {{profile.FullName}}
-            &nbsp;<button class="btn btn-xs btn-warning" {{b "click : _viewDetail"}}>
-            <span class="glyphicon glyphicon-zoom-in"></span>
-        </button>
+            <button class="btn btn-xs btn-warning" {{b "click : _viewDetail"}}>
+                <span class="glyphicon glyphicon-zoom-in"></span>
+            </button>
+            &nbsp;{{profile.fullname}}
         </td>
-        <td class="td-record-value">{{getValueOfStatus '_DANG-CHUAN-BI'}}</td>
-        <td class="td-record-value">{{getValueOfStatus '_KY-HOP-DONG'}}</td>
-        <td class="td-record-value">{{getValueOfStatus '_DANG-CHO-VISA'}}</td>
-        <td class="td-record-value">{{getValueOfStatus '_DO-VISA'}}</td>
-        <td class="td-record-value">{{getValueOfStatus '_TRUOT-VISA'}}</td>
-        <td class="td-record-value">{{getValueOfStatus '_DA-NHAP-HOC'}}</td>
+        <td class="td-record-value">{{getValueOfState '_DANG-CHUAN-BI'}}</td>
+        <td class="td-record-value">{{getValueOfState '_KY-HOP-DONG'}}</td>
+        <td class="td-record-value">{{getValueOfState '_DANG-CHO-VISA'}}</td>
+        <td class="td-record-value">{{getValueOfState '_DO-VISA'}}</td>
+        <td class="td-record-value">{{getValueOfState '_TRUOT-VISA'}}</td>
+        <td class="td-record-value">{{getValueOfState '_DA-NHAP-HOC'}}</td>
     </tr>
 </template>
 
-<template name="modal_records_treeGrid_Detail">
-    <div class="modal fade" id="modal_records_treeGrid_Detail" name="editModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<template name="modal_recordDetail">
+    <div class="modal fade" id="recordDetailModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -144,11 +145,11 @@
                                     {{#if records}}
                                         {{#each records}}
                                             <tr>
-                                                <td style="vertical-align: middle">{{_titleize FullName}}</td>
-                                                <td style="vertical-align: middle">{{Dob}}</td>
-                                                <td style="vertical-align: middle">{{_titleize AtSchool}}</td>
-                                                <td style="vertical-align: middle">{{getRecordStatusName selectedStatus}}</td>
-                                                <td style="vertical-align: middle">{{getSourcesNames selectedSources}}</td>
+                                                <td style="vertical-align: middle">{{_titleize customerName}}</td>
+                                                <td style="vertical-align: middle">{{DoB}}</td>
+                                                <td style="vertical-align: middle">{{_titleize regSchool}}</td>
+                                                <td style="vertical-align: middle">{{getRecordStatusName selectedState}}</td>
+                                                <td style="vertical-align: middle">{{getSourcesNames selectedSource}}</td>
                                             </tr>
                                         {{/each}}
                                     {{else}}

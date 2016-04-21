@@ -34,14 +34,15 @@
                             <table class="table">
                                 <thead>
                                 <tr>
-                                    <th style="width:10%">Mã hồ sơ</th>
-                                    <th>Họ và tên</th>
-                                    <th>Ngày sinh (mm/dd/yyyy)</th>
-                                    <th>Nộp trường</th>
-                                    <th>Trạng thái</th>
-                                    <th>Nháp</th>
-                                    <th>Sửa</th>
-                                    <th>Xoá</th>
+                                    <th style="width:10%" class="text-center">Mã hồ sơ</th>
+                                    <th class="text-center">Họ và tên</th>
+                                    <th class="text-center">Ngày sinh (mm/dd/yyyy)</th>
+                                    <th class="text-center">Nộp trường</th>
+                                    <th class="text-center">Trạng thái</th>
+                                    <th class="text-center">Nháp</th>
+                                    <th width="5%" class="text-center">Sửa</th>
+                                    <th width="10%" class="text-center">Bỏ theo dõi</th>
+                                    <th width="5%" class="text-center">Xoá</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -79,11 +80,11 @@
                                         <th>Họ và tên</th>
                                         <th>Địa chỉ</th>
                                         <th>Muốn du học tại</th>
-                                        <th></th>
+                                        <th>Theo dõi khách hàng</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                {{#each _cusRecords}}
+                                {{#each _potentialRecords}}
                                     {{> row_potentialList}}
                                 {{/each}}
                                 </tbody>
@@ -108,13 +109,18 @@
             <span class="glyphicon glyphicon-ok"></span>
             {{/if}}
         </td>
-        <td class="align-center">
-            <a class="_editCustomer" {{b "enable: _canModifier"}}>
+        <td class="text-center ">
+            <a class="_editCustomer">
                 <span class="glyphicon glyphicon-pencil"></span>
             </a>
         </td>
-        <td class="align-center">
-            <a class="_deleteRecord" {{b "enable: _canModifier"}}>
+        <td class="text-center">
+            <a class="_unFollowCustomer">
+                <span class="glyphicon glyphicon-transfer"></span>
+            </a>
+        </td>
+        <td class="text-center">
+            <a class="_delCustomer">
                 <span class="glyphicon glyphicon-trash"></span>
             </a>
         </td>
@@ -133,6 +139,44 @@
                     {{#autoForm collection="CustomerRecords" id="insertCusRecordsForm" type="insert"}}
                         {{> form_customer}}
                     {{/autoForm}}
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template name="modal_unFollowCustomer">
+    <div class="modal fade" id="unFollowCustomerModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Bỏ theo dõi khách hàng</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Bạn có chắc chắn muốn Bỏ theo dõi?</p>
+                    <p><span class="glyphicon glyphicon-info-sign"></span>&nbsp; Bạn vẫn có thể tìm thấy khách hàng này ở bảng Khách hàng tiềm năng.</p>
+                    <button type="button" class="btn btn-info" {{b "click: unFollow"}}>Bỏ theo dõi</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Huỷ</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template name="modal_delCustomer">
+    <div class="modal fade" id="delCustomerModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Xoá khách hàng</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Bạn có chắc chắn muốn xoá khách hàng này?</p>
+                    <p><span class="glyphicon glyphicon-exclamation-sign"></span>&nbsp; Hành động này không thể hoàn tác.</p>
+                    <button type="button" class="btn btn-danger" {{b "click: delCustomer"}}>Xoá</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Huỷ</button>
                 </div>
             </div>
         </div>
@@ -295,6 +339,8 @@
         <td>{{customerName}}</td>
         <td>{{address}}</td>
         <td>{{regCountry}}</td>
-        <td><a type="button" class="btn btn-warning"><span class="glyphicon glyphicon-star-empty"></span> Theo dõi</a></td>
+        <td>
+            <a type="button" class="btn btn-warning" {{b "click: follow"}}><span class="glyphicon glyphicon-star-empty"></span> Theo dõi</a>
+        </td>
     </tr>
 </template>

@@ -1,14 +1,6 @@
 Template.home.viewmodel({
-    _getBranches: function () {
-        var branches = AllValues.find({haveFilterCode: 'TvLJviY7wXkxJboKS'});
-        var i = 0;
-        return branches.map(function (b) {
-            var index = i++;
-            return _.extend(b, {
-                index: index,
-                className: 'treegrid-' + (index) + '-0'
-            });
-        })
+    _branches: function () {
+        return AllValues.find({haveFilterCode: 'TvLJviY7wXkxJboKS'});
     },
     startDate : null,
     endDate : null,
@@ -50,11 +42,11 @@ Template.home.viewmodel({
         }
     }
 });
-/*
-Template.records_treeGrid_level_1.viewmodel({
-    getUsers: function () {
+
+Template.row_branchLevel1.viewmodel({
+    getConsultants: function () {
         var branch = this.data();
-        var users = Meteor.users.find({'profile.Branch': branch.id, roles: 'tuvan'}).fetch();
+        var users = Meteor.users.find({'profile.branch': branch.valueCode, roles: 'consultant'}).fetch();
         var i = 0;
         return users.map(function (u) {
             var index = ++i;
@@ -65,70 +57,36 @@ Template.records_treeGrid_level_1.viewmodel({
             })
         })
     },
-    getValueOfStatusAtBranch : function(status){
-        var userIds = this.getUsers().map(function(u){return u._id});
-        return StudyRecords.find({updatedBy : {$in : userIds},selectedStatus : status}).count() || 0;
+    getValueOfStateAtBranch : function(state){
+        var userIds = this.getConsultants().map(function(u){return u._id});
+        return CustomerRecords.find({updatedBy : {$in : userIds},state : state}).count() || 0;
     }
 });
 
-Template.records_treeGrid_level_2.viewmodel({
-    getValueOfStatus : function(status){
+Template.row_branchLevel2.viewmodel({
+    getValueOfState : function(state){
         var user = this.data();
-        return StudyRecords.find({updatedBy : user._id, selectedStatus : status}).count() || 0;
+        return CustomerRecords.find({updatedBy : user._id, state : state}).count() || 0;
     },
     _viewDetail : function(){
         var user = this.data();
         var _data = {
-            title : user.profile.FullName,
-            records : StudyRecords.find({updatedBy : user._id})
+            title : user.profile.fullname,
+            records : CustomerRecords.find({updatedBy : user._id})
         }
-        var modalId = Blaze.renderWithData(Template.modal_records_treeGrid_Detail, _data, document.getElementsByTagName('body')[0]);
-        $('#modal_records_treeGrid_Detail').modal('show').on('hidden.bs.modal', function (e) {
+        var modalId = Blaze.renderWithData(Template.modal_recordDetail, _data, document.getElementsByTagName('body')[0]);
+        $('#recordDetailModal').modal('show').on('hidden.bs.modal', function (e) {
             Blaze.remove(modalId);
         });
     }
 });
 
-Template.modal_records_treeGrid_Detail.viewmodel({
+
+Template.modal_recordDetail.viewmodel({
     onCreated : function(){
         console.log(this.data().records.fetch());
     }
-})
-
-Template.home.viewmodel({
 });
-
-Template.eventLog.viewmodel({
-    event: function () {
-        return this.templateInstance.data;
-    },
-    total : function(){
-        var _event = this.event();
-        var logs = EventLogs.find({eventCode: _event.code}).fetch();
-        var totalRegisters = 0;
-        _.each(logs, function (i) {
-            return totalRegisters += i.soluong;
-        });
-        return totalRegisters;
-    },
-    pathDetail : function(){
-        var code = this.event().code;
-        if(code){
-            return FlowRouter.path('event_detail', {code : code});
-        }
-    },
-    pathChart : function(){
-        var code = this.event().code;
-        if(code){
-            return FlowRouter.path('event_chart', {code : code});
-        }
-    },
-    autorun: function () {
-        if (this.event()) {
-            Subs.subscribe('getEventLogs', this.event().code);
-        }
-    }
-})*/
 
 Template.regReport.viewmodel({
     _cates: function(){
@@ -143,21 +101,17 @@ Template.row_regReport.viewmodel({
     },
     total: function(){
         var cate = this.cates();
-        console.log(cate.valueCode)
+        //console.log(cate.valueCode)
         return RegisterRecords.find({catecode: cate.valueCode}).count()
-        //var total = reg.count();
-        //return total
     },
     potential: function(){
         var cate = this.cates();
-        console.log(cate.valueCode)
-        var reg = RegisterRecords.find({catecode: cate.valueCode, status: 'LeEXHGgKhRLzRCo3P'})
-        return reg.count()
+        //console.log(cate.valueCode)
+        return RegisterRecords.find({catecode: cate.valueCode, status: 'LeEXHGgKhRLzRCo3P'}).count()
     },
     notcalled: function(){
         var cate = this.cates();
-        console.log(cate.valueCode)
-        var reg = RegisterRecords.find({catecode: cate.valueCode, status: 'LeEXHGgKhRLzRCo3P'})
-        return reg.count()
+        //console.log(cate.valueCode)
+        return RegisterRecords.find({catecode: cate.valueCode, status: 'LeEXHGgKhRLzRCo3P'}).count()
     }
 })

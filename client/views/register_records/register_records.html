@@ -212,7 +212,13 @@
         <td>{{Status}}</td>
         <td>{{note}}</td>
         <td>{{UpdatedBy}}</td>
-        <td class="text-center"><a class="mgray _delRequestModal"><span class="glyphicon glyphicon-trash"></span></a></td>
+        <td class="text-center">
+            {{#if _haveDelQuest}}
+            <a class="mgray _cancelDelQuest"><span class="glyphicon glyphicon-grain"></span></a>
+            {{else}}
+            <a class="mgray _delRequestModal"><span class="glyphicon glyphicon-trash"></span></a>
+            {{/if}}
+        </td>
     </tr>
 </template>
 
@@ -229,21 +235,19 @@
                         <div class="col-xs-12">
                             <p>Lý do xoá:</p>
                             <div class="radio">
-                                <label><input type="radio" name="delReason" id="delReason1" value="Thông tin không chính xác"/> Thông tin không chính xác</label>
+                                <label><input type="radio" name="delReasons" id="delReason1" value="Thông tin không chính xác" {{b "group: delReason" }}/> Thông tin không chính xác</label>
                             </div>
                             <div class="radio">
-                                <label><input type="radio" name="delReason" id="delReason2" value="Khách hàng bị lặp"/> Khách hàng bị lặp</label>
+                                <label><input type="radio" name="delReasons" id="delReason2" value="Khách hàng bị lặp" {{b "group: delReason" }}/> Khách hàng bị lặp</label>
                             </div>
                             <div class="radio">
-                                <label><input type="radio" name="delReason" id="delReason3"/> Lý do khác</label>
+                                <label><input type="radio" name="delReasons" id="delReason3" value="" {{b "group: delReason, check: enableDel"}}/> Lý do khác</label>
                             </div>
-                            {{#if _enable}}
-                            <input type="text" id="reason3"/>
-                            {{/if}}
+                            <input type="text" id="reason3" class="form-control" placeholder="Lý do xoá khác" required {{b "if: enableDel, value: otherDelReason"}}/>
                         </div>
                         <div class="col-xs-12">
                             <hr/>
-                            <p>Bạn không thể xoá trực tiếp. Yêu cầu xoá của bạn sẽ được tiếp nhận và xử lý sau.</p>
+                            <p><span class="glyphicon glyphicon-info-sign"></span>&nbsp; Bạn không thể trực tiếp xoá. Yêu cầu xoá của bạn sẽ được tiếp nhận và xử lý sau.</p>
                         </div>
                     </div>
                 </div>
